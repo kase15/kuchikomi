@@ -1,4 +1,4 @@
-import { NextApiRequest, NextApiResponse } from 'next';
+import { NextRequest, NextResponse } from 'next/server';
 import axios from 'axios';
 
 const getPlaceId = async (apiKey: string, placeName: string) => {
@@ -35,17 +35,17 @@ const getReviews = async (placeId: string, apiKey: string) => {
   return response.data.result.reviews;
 };
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
-  const { api_key, place_name } = req.body;
+export async function POST(req: NextRequest) {
+  const { api_key, place_name } = await req.json();
 
   if (!api_key || !place_name) {
-    return res.status(400).json({ error: 'API key and place name are required' });
+    return NextResponse.json({ error: 'API key and place name are required' }, { status: 400 });
   }
 
   try {
     const placeId = await getPlaceId(api_key, place_name);
     if (!placeId) {
-      return res.status(400).json({ error: 'Place not found' });
+      return NextResponse.json({ error: 'Place not found' }, { status: 400 });
     }
 
     const businessDetails = await getBusinessDetails(placeId, api_key);
@@ -56,8 +56,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       reviews,
     };
 
-    return res.status(200).json(businessInfo);
+    return NextResponse.json(businessInfo, { status: 200 });
   } catch (error) {
-    return res.status(500).json({ error: 'Internal Server Error' });
+    return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 });
   }
-};
+}
