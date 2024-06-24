@@ -29,6 +29,7 @@ const getReviews = async (placeId: string, apiKey: string) => {
     params: {
       place_id: placeId,
       fields: 'review',
+      'reviews_no_translations': 'true',
       key: apiKey,
     },
   });
