@@ -19,6 +19,7 @@ const getBusinessDetails = async (placeId: string, apiKey: string) => {
       place_id: placeId,
       fields: 'name,formatted_address,formatted_phone_number,website,rating,user_ratings_total,opening_hours',
       key: apiKey,
+      language: 'ja'  // 日本語を指定
     },
   });
   return response.data.result;
@@ -29,8 +30,8 @@ const getReviews = async (placeId: string, apiKey: string) => {
     params: {
       place_id: placeId,
       fields: 'review',
-      'reviews_no_translations': 'true',
       key: apiKey,
+      language: 'ja'  // 日本語を指定
     },
   });
   return response.data.result.reviews;
